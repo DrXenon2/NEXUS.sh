@@ -1,92 +1,75 @@
 #!/bin/bash
 
 # ==============================================
-# SCRIPT : GENERATEUR DE CHAPITRES NEXUS
+# SCRIPT : GÉNÉRATEUR DE CHAPITRES NEXUS (WORD)
 # DOSSIER : NEXUS L'ÉVEIL DU SUJET ZÉRO
-# CHAPITRES : 1 à 320
+# CHAPITRES : 1 à 320 (format .docx)
+# VERSION MINIMALISTE
 # ==============================================
 
-# --- 1. Définition du nom du dossier principal ---
+# --- 1. Vérification de Pandoc ---
+echo "🔍 Vérification de Pandoc..."
+if ! command -v pandoc &> /dev/null; then
+    echo "❌ Pandoc n'est pas installé."
+    echo ""
+    echo "📥 Pour installer Pandoc sur Git Bash (Windows) :"
+    echo "   1. Téléchargez-le sur : https://pandoc.org/installing.html"
+    echo "   2. Ou avec Chocolatey : choco install pandoc"
+    echo "   3. Ou avec Scoop : scoop install pandoc"
+    echo ""
+    read -p "Voulez-vous continuer avec des fichiers .txt ? (o/N) : " reponse
+    
+    if [[ "$reponse" =~ ^[oO]$ ]]; then
+        echo "📄 Génération en .txt (sans Pandoc)..."
+        EXTENSION="txt"
+        USE_PANDOC=false
+    else
+        echo "❌ Script annulé. Installez Pandoc et réessayez."
+        exit 1
+    fi
+else
+    echo "✅ Pandoc est installé !"
+    EXTENSION="docx"
+    USE_PANDOC=true
+fi
+
+# --- 2. Définition du dossier ---
 NOM_DOSSIER="NEXUS L'ÉVEIL DU SUJET ZÉRO"
 
-# --- 2. Création du dossier principal ---
+# --- 3. Création du dossier ---
 echo "Création du dossier : $NOM_DOSSIER"
 mkdir -p "$NOM_DOSSIER"
 
-# Vérifier si le dossier a bien été créé
 if [ ! -d "$NOM_DOSSIER" ]; then
     echo "❌ Erreur : Impossible de créer le dossier."
     exit 1
 fi
 
-# --- 3. Boucle de création des 320 chapitres ---
+# --- 4. Génération des 320 chapitres ---
 echo "Début de la génération des 320 chapitres..."
 
 for i in $(seq 1 320); do
-    # Formatage du numéro de chapitre sur 3 chiffres (ex: 001, 002, ... 320)
     NUM_FORMATE=$(printf "%03d" $i)
-    
-    # Nom du fichier : Chapitre_001.txt, Chapitre_002.txt, etc.
-    NOM_FICHIER="Chapitre_${NUM_FORMATE}.txt"
-    
-    # Chemin complet du fichier
+    NOM_FICHIER="Chapitre_${NUM_FORMATE}.${EXTENSION}"
     CHEMIN_FICHIER="$NOM_DOSSIER/$NOM_FICHIER"
     
-    # --- Contenu du fichier (template) ---
-    cat > "$CHEMIN_FICHIER" <<EOF
-==================================================
-   NEXUS : L'ÉVEIL DU SUJET ZÉRO
-==================================================
-
-CHAPITRE $i
-
-DATE DE CRÉATION : $(date '+%Y-%m-%d %H:%M:%S')
-
---- RÉSUMÉ ---
-Ceci est le contenu placeholder du chapitre $i.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-
---- NOTES DE L'AUTEUR ---
-[Espace pour vos annotations personnelles]
-
---- PROCHAIN CHAPITRE ---
-Le chapitre $((i+1)) explorera les mystères de la Nexus.
-
-EOF
-
-    # Afficher une progression toutes les 10 itérations
+    # Contenu minimal : juste le titre du chapitre
+    CONTENU="CHAPITRE $i"
+    
+    if [ "$USE_PANDOC" = true ]; then
+        echo "$CONTENU" | pandoc -o "$CHEMIN_FICHIER"
+    else
+        echo "$CONTENU" > "$CHEMIN_FICHIER"
+    fi
+    
     if [ $((i % 10)) -eq 0 ]; then
         echo "   ✓ $i chapitres générés..."
     fi
 done
 
-# --- 4. Message de fin ---
+# --- 5. Fin ---
 echo "✅ Génération terminée avec succès !"
 echo "📁 Dossier créé : $(pwd)/$NOM_DOSSIER"
 echo "📄 Nombre de fichiers : $(ls -1 "$NOM_DOSSIER" | wc -l)"
-echo ""
-echo "Structure des fichiers :"
-ls -la "$NOM_DOSSIER" | head -10
-echo "... (et les autres)"
-
-# Bonus : Créer un fichier README pour le projet
-cat > "$NOM_DOSSIER/README.txt" <<EOF
-==================================================
-   PROJET : NEXUS - L'ÉVEIL DU SUJET ZÉRO
-==================================================
-
-Ce dossier contient les 320 chapitres du projet.
-
-- Chaque fichier est nommé Chapitre_XXX.txt
-- Les chapitres sont numérotés de 001 à 320
-- Date de génération : $(date '+%Y-%m-%d %H:%M:%S')
-
-Bonne écriture !
-EOF
-
-echo "📄 Fichier README.txt créé dans le dossier."
 
 exit 0
