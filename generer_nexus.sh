@@ -3,31 +3,31 @@
 # ============================================================
 # SCRIPT : GÉNÉRATEUR DE CHAPITRES NEXUS (WORD)
 # PROJET : NEXUS L'ÉVEIL DU SUJET ZÉRO
-# VERSION : 2.0 - COMPLÈTE AVEC OPTIONS
+# VERSION : 2.0 - 500 CHAPITRES PAR DÉFAUT
 # ============================================================
 
-# --- COULEURS pour un affichage agréable ---
+# --- COULEURS ---
 ROUGE='\033[0;31m'
 VERT='\033[0;32m'
 JAUNE='\033[1;33m'
 BLEU='\033[0;34m'
 CYAN='\033[0;36m'
 GRAS='\033[1m'
-NC='\033[0m' # Pas de couleur
+NC='\033[0m'
 
 # --- BANNER ---
 echo -e "${CYAN}${GRAS}"
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║                                                          ║"
 echo "║     NEXUS : L'ÉVEIL DU SUJET ZÉRO                       ║"
-echo "║     GÉNÉRATEUR DE CHAPITRES (320)                       ║"
+echo "║     GÉNÉRATEUR DE CHAPITRES (500)                       ║"
 echo "║                                                          ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 # --- 1. PARAMÈTRES PAR DÉFAUT ---
 NOM_DOSSIER="NEXUS L'ÉVEIL DU SUJET ZÉRO"
-NB_CHAPITRES=320
+NB_CHAPITRES=500          # <--- Changé de 320 à 500
 EXTENSION="docx"
 USE_PANDOC=false
 CONTENU_PERSONNALISE=""
@@ -40,17 +40,16 @@ afficher_aide() {
     echo ""
     echo -e "${BLEU}${GRAS}OPTIONS :${NC}"
     echo "  -h, --help          Affiche cette aide"
-    echo "  -n, --nb N          Nombre de chapitres (défaut: 320)"
+    echo "  -n, --nb N          Nombre de chapitres (défaut: 500)"
     echo "  -d, --dossier NOM   Nom du dossier (défaut: NEXUS L'ÉVEIL DU SUJET ZÉRO)"
     echo "  -t, --txt           Force la génération en .txt (même si Pandoc est présent)"
     echo "  -c, --contenu TEXTE Contenu personnalisé des chapitres"
     echo "  -q, --quiet         Mode silencieux (pas de progression)"
     echo ""
     echo -e "${BLEU}${GRAS}EXEMPLES :${NC}"
-    echo "  ./generer_nexus.sh                           # 320 chapitres en .docx"
-    echo "  ./generer_nexus.sh -n 50 -d \"Mon Projet\"   # 50 chapitres dans Mon Projet"
+    echo "  ./generer_nexus.sh                           # 500 chapitres en .docx"
+    echo "  ./generer_nexus.sh -n 100 -d \"Mon Projet\"   # 100 chapitres"
     echo "  ./generer_nexus.sh -t -c \"Chapitre \"       # En .txt avec contenu personnalisé"
-    echo "  ./generer_nexus.sh -n 100 -q                # 100 chapitres, mode silencieux"
     exit 0
 }
 
@@ -134,7 +133,6 @@ fi
 echo -e "${JAUNE}🚀 Début de la génération des $NB_CHAPITRES chapitres (format .$EXTENSION)...${NC}"
 echo ""
 
-# Temps de début pour le chronométrage
 DEBUT=$(date +%s)
 
 for i in $(seq 1 $NB_CHAPITRES); do
@@ -142,23 +140,18 @@ for i in $(seq 1 $NB_CHAPITRES); do
     NOM_FICHIER="Chapitre_${NUM_FORMATE}.${EXTENSION}"
     CHEMIN_FICHIER="$NOM_DOSSIER/$NOM_FICHIER"
     
-    # --- Contenu du chapitre ---
     if [[ -n "$CONTENU_PERSONNALISE" ]]; then
-        # Contenu personnalisé
         CONTENU="${CONTENU_PERSONNALISE} ${i}"
     else
-        # Contenu par défaut
         CONTENU="CHAPITRE $i"
     fi
     
-    # --- Génération du fichier ---
     if [ "$USE_PANDOC" = true ]; then
         echo "$CONTENU" | pandoc -o "$CHEMIN_FICHIER" 2>/dev/null
     else
         echo "$CONTENU" > "$CHEMIN_FICHIER"
     fi
     
-    # --- Progression ---
     if [[ "$AFFICHER_PROGRESSION" = true ]]; then
         if [ $((i % 10)) -eq 0 ] || [ $i -eq 1 ] || [ $i -eq $NB_CHAPITRES ]; then
             POURCENT=$(( (i * 100) / NB_CHAPITRES ))
@@ -167,7 +160,6 @@ for i in $(seq 1 $NB_CHAPITRES); do
     fi
 done
 
-# --- 7. STATISTIQUES FINALES ---
 FIN=$(date +%s)
 DUREE=$((FIN - DEBUT))
 
@@ -178,7 +170,7 @@ echo -e "${VERT}📄 Nombre de fichiers : $(ls -1 "$NOM_DOSSIER" 2>/dev/null | w
 echo -e "${VERT}⏱️  Temps d'exécution : ${DUREE} secondes${NC}"
 echo -e "${VERT}📐 Format : .$EXTENSION${NC}"
 
-# --- 8. CRÉATION D'UN README ---
+# --- 7. README ---
 cat > "$NOM_DOSSIER/README.txt" <<EOF
 ==================================================
    PROJET : NEXUS - L'ÉVEIL DU SUJET ZÉRO
