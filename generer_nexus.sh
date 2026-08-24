@@ -3,7 +3,7 @@
 # ============================================================
 # SCRIPT : GÉNÉRATEUR DE CHAPITRES NEXUS (WORD)
 # PROJET : NEXUS L'ÉVEIL DU SUJET ZÉRO
-# VERSION : 2.0 - 500 CHAPITRES PAR DÉFAUT
+# VERSION : 2.0 - 550 CHAPITRES PAR DÉFAUT
 # ============================================================
 
 # --- COULEURS ---
@@ -20,14 +20,14 @@ echo -e "${CYAN}${GRAS}"
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║                                                          ║"
 echo "║     NEXUS : L'ÉVEIL DU SUJET ZÉRO                       ║"
-echo "║     GÉNÉRATEUR DE CHAPITRES (500)                       ║"
+echo "║     GÉNÉRATEUR DE CHAPITRES (550)                       ║"
 echo "║                                                          ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 # --- 1. PARAMÈTRES PAR DÉFAUT ---
 NOM_DOSSIER="NEXUS L'ÉVEIL DU SUJET ZÉRO"
-NB_CHAPITRES=500          # <--- Changé de 320 à 500
+NB_CHAPITRES=550          # <--- Changé de 320 à 500
 EXTENSION="docx"
 USE_PANDOC=false
 CONTENU_PERSONNALISE=""
