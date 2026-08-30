@@ -19,15 +19,15 @@ NC='\033[0m'
 echo -e "${CYAN}${GRAS}"
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║                                                          ║"
-echo "║     NEXUS : L'ÉVEIL DU SUJET ZÉRO                       ║"
-echo "║     GÉNÉRATEUR DE CHAPITRES (550)                       ║"
+echo "║     NEXUS : L'ÉVEIL DU SUJET ZÉRO                        ║"
+echo "║     GÉNÉRATEUR DE CHAPITRES (650)                        ║"
 echo "║                                                          ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 # --- 1. PARAMÈTRES PAR DÉFAUT ---
 NOM_DOSSIER="NEXUS L'ÉVEIL DU SUJET ZÉRO"
-NB_CHAPITRES=550          # <--- Changé de 320 à 500
+NB_CHAPITRES=650          # <--- Changé de 320 à 500
 EXTENSION="docx"
 USE_PANDOC=false
 CONTENU_PERSONNALISE=""
